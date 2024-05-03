@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -113,7 +113,7 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamed'
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -481,6 +481,8 @@ require('lazy').setup({
           --  Useful when your language has ways of declaring types without an actual implementation.
           map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
+          map('<C-k>', vim.lsp.buf.signature_help, 'Signature Help')
+
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
@@ -758,11 +760,11 @@ require('lazy').setup({
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
           ['<Tab>'] = cmp.mapping(function(fallback)
-            -- if luasnip.expand_or_locally_jumpable() then
-            --   luasnip.expand_or_jump()
-            -- else
-            fallback()
-            -- end
+            if luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
           end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function(fallback)
             if luasnip.locally_jumpable(-1) then
@@ -778,7 +780,7 @@ require('lazy').setup({
         sources = {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
-          { name = 'path' },
+          -- { name = 'path' },
           -- { name = 'buffer' },
         },
       }
